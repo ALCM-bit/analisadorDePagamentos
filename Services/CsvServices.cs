@@ -1,11 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using analisadorDePagamento.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Microsoft.AspNetCore.Http;
 
 namespace analisadorDePagamento.Services
 {
@@ -37,7 +40,7 @@ namespace analisadorDePagamento.Services
                 
                 
                 //Depois de criar o departamento - Analisar os dados do ponto é necessário
-                var configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
+                var configuration = new CsvConfiguration(CultureInfo.GetCultureInfo("pt-BR"))
                 {
                     Delimiter = ";",
                     HasHeaderRecord = true,
@@ -45,31 +48,39 @@ namespace analisadorDePagamento.Services
                     // TypeConverterOptions = { NumberStyles = NumberStyles.AllowDecimalPoint },
                     // CultureInfo = CultureInfo.GetCultureInfo("pt-BR")
                 };
-                using var reader = new StreamReader(file);
+                using var reader = new StreamReader(file, Encoding.GetEncoding("iso-8859-1"));
                 using var csv = new CsvReader(reader, configuration);
                 var folhasPonto = new List<FolhaPonto>();
                 var records = csv.GetRecords<dynamic>();
                 foreach (var record in records.Skip(1))
                 {
-                    //var horarioAlmoco = record.Almoço;
                     var horarios = record.Almoço.Split('-');
-                    var iniciAlmoco = DateTime.ParseExact(horarios[0].Trim(), "HH:mm", CultureInfo.InvariantCulture);
-                    var terminoAlmoco = DateTime.ParseExact(horarios[1].Trim(), "HH:mm", CultureInfo.InvariantCulture);
+                    var iniciAlmoco = TimeSpan.ParseExact(horarios[0].Trim(), "hh\\:mm", CultureInfo.InvariantCulture);
+                    var terminoAlmoco = TimeSpan.ParseExact(horarios[1].Trim(), "hh\\:mm", CultureInfo.InvariantCulture);
+
+                    var codigo = int.Parse(record.Código);
+                    var valorHora = decimal.Parse(record.Valorhora.Replace("R$", "").Replace(",", ".").Replace(" ", "").Trim(), CultureInfo.GetCultureInfo("pt-BR"));
+                    var data = DateTime.ParseExact(record.Data, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    var entrada = TimeSpan.ParseExact(record.Entrada, "hh\\:mm\\:ss", CultureInfo.InvariantCulture);
+                    var saida = TimeSpan.ParseExact(record.Saída, "hh\\:mm\\:ss", CultureInfo.InvariantCulture);
 
                     var folhaPonto = new FolhaPonto
                     {
                         Nome = record.Nome,
-                        Codigo = record.Codigo,
-                        ValorHora = record.ValorHora,
-                        Data = record.Data,
-                        Entrada = record.Entrada,
-                        Saida = record.Saida,
+                        Codigo = codigo,
+                        ValorHora = valorHora,
+                        Data = data,
+                        Entrada = entrada,
+                        Saida = saida,
                         IniciAlmoco = iniciAlmoco,
                         TerminoAlmoco = terminoAlmoco
                     };
+
                     folhasPonto.Add(folhaPonto);
                 }
+                folhasPonto.RemoveAll(item => item == null);
                 var funcionariosProcessados = _funcionarioService.CalculaDados(folhasPonto);
+                funcionariosProcessados.RemoveAll(item => item == null);
                 departamento.Funcionarios.AddRange(funcionariosProcessados);
                 departamentos.Add(departamento);
             }

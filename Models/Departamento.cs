@@ -14,6 +14,6 @@ namespace analisadorDePagamento.Models
         public Decimal TotalDescontos { get; set; }
         public Decimal TotalExtras { get; set; }
 
-        public List<Funcionario>? Funcionarios { get; set; }
+        public List<Funcionario> Funcionarios { get; set; } = new List<Funcionario>();
     }
 }

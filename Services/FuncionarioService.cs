@@ -44,26 +44,15 @@ namespace analisadorDePagamento.Services
                     funcionario.DiasTrabalhados++;
                     funcionariosProcessados.Add(funcionario);
                 }
-                // Se o funcionário já foi processado, adicionar horas trabalhadas e dias trabalhados
-                else {
-                    TimeSpan horasTrabalhadas = folha.Saida - folha.Entrada - (folha.IniciAlmoco - folha.TerminoAlmoco);
-                    if (horasTrabalhadas.TotalHours > 8) {
-                        funcionarioExistente.HorasExtra = funcionarioExistente.HorasExtra + ((decimal)horasTrabalhadas.TotalHours - 8);
-                        funcionarioExistente.TotalReceber += (8 * folha.ValorHora) + ((decimal)(horasTrabalhadas.TotalHours - 8) * folha.ValorHora * 1.5M);
-                    }
-                    else {
-                        funcionarioExistente.TotalReceber += (decimal)horasTrabalhadas.TotalHours * folha.ValorHora;
-                    }
-
-                    funcionarioExistente.DiasTrabalhados++;
-                }
                 //Adiciona funcionario a lista processada
-                funcionariosProcessados.Add(funcionarioExistente);
+               // funcionariosProcessados.Add(funcionarioExistente);
             }
 
             // Calcular dias extras e dias de falta
             foreach (Funcionario funcionario in funcionariosProcessados) {
-                // Verificar se o funcionário trabalhou mais de 22 dias no mês
+                if (funcionario != null)
+                {
+                    // Verificar se o funcionário trabalhou mais de 22 dias no mês
                 if (funcionario.DiasTrabalhados > 22) {
                     funcionario.DiasExtras = funcionario.DiasTrabalhados - 22;
                 }
@@ -73,6 +62,9 @@ namespace analisadorDePagamento.Services
                 if (diasFalta > 0) {
                     funcionario.DiasFalta = diasFalta;
                 }
+
+                }
+                
             }
             return funcionariosProcessados;
         }
