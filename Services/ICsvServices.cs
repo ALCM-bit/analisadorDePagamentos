@@ -8,6 +8,6 @@ namespace analisadorDePagamento.Services
 {
     public interface ICsvServices
     {
-        List<FolhaPonto> GetDadosCsv(string pasta);
+        List<Departamento> GetDadosCsv(string pasta);
     }
 }

@@ -10,7 +10,7 @@ namespace analisadorDePagamento.Services
 {
     public class CsvServices : ICsvServices
     {
-        public List<FolhaPonto> GetDadosCsv(string pasta)
+        public List<Departamento> GetDadosCsv(string pasta)
         {
             var departamentos = new List<Departamento>();
             var files = Directory.GetFiles(@$"{pasta}", "*.csv");
@@ -28,20 +28,20 @@ namespace analisadorDePagamento.Services
                 };
 
                 departamentos.Add(departamento);
-
+                
                 //Depois de criar o departamento - Analisar os dados do ponto é necessário
-                var folhasPonto = new List<FolhaPonto>();
+                
                 using var reader = new StreamReader(file);
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-                // ignore a primeira linha do arquivo csv
-                csv.Configuration.HasHeaderRecord = true;
-                csv.Configuration.HeaderValidated = null;
-                csv.Configuration.MissingFieldFound = null;
-
+                var folhasPonto = new List<FolhaPonto>();
                 var records = csv.GetRecords<dynamic>();
                 foreach (var record in records.Skip(1))
                 {
+                    var horarioAlmoco = record.HorarioAlmoco;
+                    var horarios = horarioAlmoco.Split('-');
+                    var iniciAlmoco = DateTime.ParseExact(horarios[0].Trim(), "HH:mm", CultureInfo.InvariantCulture);
+                    var terminoAlmoco = DateTime.ParseExact(horarios[1].Trim(), "HH:mm", CultureInfo.InvariantCulture);
+
                     var folhaPonto = new FolhaPonto
                     {
                         Nome = record.Nome,
@@ -50,13 +50,13 @@ namespace analisadorDePagamento.Services
                         Data = record.Data,
                         Entrada = record.Entrada,
                         Saida = record.Saida,
-                        IniciAlmoco = record.IniciAlmoco,
-                        TerminoAlmoco = record.TerminoAlmoco
+                        IniciAlmoco = iniciAlmoco,
+                        TerminoAlmoco = terminoAlmoco
                     };
-
                     folhasPonto.Add(folhaPonto);
                 }
             }
+            return departamentos;
         }
     }
 }
