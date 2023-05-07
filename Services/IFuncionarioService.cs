@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using analisadorDePagamento.Models;
 
-namespace analisadorDePagamento.Repositories
+namespace analisadorDePagamento.Services
 {
-    public interface IDataRepository
+    public interface IFuncionarioService
     {
-        List<Departamento> GetDepartamentos(string pasta);
+        List<Funcionario> CalculaDados(List<FolhaPonto> ponto);
     }
 }

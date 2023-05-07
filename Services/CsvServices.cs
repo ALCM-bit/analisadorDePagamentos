@@ -5,11 +5,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using analisadorDePagamento.Models;
 using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace analisadorDePagamento.Services
 {
     public class CsvServices : ICsvServices
     {
+        private readonly IFuncionarioService _funcionarioService;
+        public CsvServices(IFuncionarioService funcionarioService)
+        {
+            _funcionarioService = funcionarioService;
+            
+        }
         public List<Departamento> GetDadosCsv(string pasta)
         {
             var departamentos = new List<Departamento>();
@@ -18,7 +25,7 @@ namespace analisadorDePagamento.Services
             foreach (var file in files)
             {
                 var filename = Path.GetFileNameWithoutExtension(file);
-                var parts = filename.Split("_");
+                var parts = filename.Split("-");
 
                 var departamento = new Departamento
                 {
@@ -26,19 +33,26 @@ namespace analisadorDePagamento.Services
                     MesVigencia = parts[1],
                     AnoVigencia = parts[2]
                 };
-
-                departamentos.Add(departamento);
+                
+                
                 
                 //Depois de criar o departamento - Analisar os dados do ponto é necessário
-                
+                var configuration = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    Delimiter = ";",
+                    HasHeaderRecord = true,
+                    IgnoreBlankLines = true,
+                    // TypeConverterOptions = { NumberStyles = NumberStyles.AllowDecimalPoint },
+                    // CultureInfo = CultureInfo.GetCultureInfo("pt-BR")
+                };
                 using var reader = new StreamReader(file);
-                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+                using var csv = new CsvReader(reader, configuration);
                 var folhasPonto = new List<FolhaPonto>();
                 var records = csv.GetRecords<dynamic>();
                 foreach (var record in records.Skip(1))
                 {
-                    var horarioAlmoco = record.HorarioAlmoco;
-                    var horarios = horarioAlmoco.Split('-');
+                    //var horarioAlmoco = record.Almoço;
+                    var horarios = record.Almoço.Split('-');
                     var iniciAlmoco = DateTime.ParseExact(horarios[0].Trim(), "HH:mm", CultureInfo.InvariantCulture);
                     var terminoAlmoco = DateTime.ParseExact(horarios[1].Trim(), "HH:mm", CultureInfo.InvariantCulture);
 
@@ -55,6 +69,9 @@ namespace analisadorDePagamento.Services
                     };
                     folhasPonto.Add(folhaPonto);
                 }
+                var funcionariosProcessados = _funcionarioService.CalculaDados(folhasPonto);
+                departamento.Funcionarios.AddRange(funcionariosProcessados);
+                departamentos.Add(departamento);
             }
             return departamentos;
         }
