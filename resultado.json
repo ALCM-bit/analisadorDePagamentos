@@ -1,0 +1,52 @@
+[
+  {
+    "Nome": "Departamento de Operações Especiais",
+    "MesVigencia": "Abril",
+    "AnoVigencia": "2022",
+    "TotalPagar": 30960.63,
+    "TotalDescontos": 0.00,
+    "TotalExtras": 30960.63,
+    "Funcionarios": [
+      {
+        "Codigo": 1,
+        "Nome": "João da Silva",
+        "TotalReceber": 29961.90,
+        "HorasExtra": 30.0,
+        "HorasDebito": 0.0,
+        "DiasFalta": 0,
+        "DiasExtras": 8,
+        "DiasTrabalhados": 30
+      },
+      {
+        "Codigo": 2,
+        "Nome": "João da Silva",
+        "TotalReceber": 998.73,
+        "HorasExtra": 1.0,
+        "HorasDebito": 0.0,
+        "DiasFalta": 21,
+        "DiasExtras": 0,
+        "DiasTrabalhados": 1
+      }
+    ]
+  },
+  {
+    "Nome": "Departamento de Operações",
+    "MesVigencia": "Abril",
+    "AnoVigencia": "2022",
+    "TotalPagar": 29961.90,
+    "TotalDescontos": 0.00,
+    "TotalExtras": 29961.90,
+    "Funcionarios": [
+      {
+        "Codigo": 1,
+        "Nome": "João da Silva",
+        "TotalReceber": 29961.90,
+        "HorasExtra": 30.0,
+        "HorasDebito": 0.0,
+        "DiasFalta": 0,
+        "DiasExtras": 8,
+        "DiasTrabalhados": 30
+      }
+    ]
+  }
+]
