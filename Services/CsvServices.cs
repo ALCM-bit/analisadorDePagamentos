@@ -52,14 +52,14 @@ namespace analisadorDePagamento.Services
                 using var csv = new CsvReader(reader, configuration);
                 var folhasPonto = new List<FolhaPonto>();
                 var records = csv.GetRecords<dynamic>();
-                foreach (var record in records.Skip(1))
+                foreach (var record in records)
                 {
                     var horarios = record.Almoço.Split('-');
                     var iniciAlmoco = TimeSpan.ParseExact(horarios[0].Trim(), "hh\\:mm", CultureInfo.InvariantCulture);
                     var terminoAlmoco = TimeSpan.ParseExact(horarios[1].Trim(), "hh\\:mm", CultureInfo.InvariantCulture);
 
                     var codigo = int.Parse(record.Código);
-                    var valorHora = decimal.Parse(record.Valorhora.Replace("R$", "").Replace(",", ".").Replace(" ", "").Trim(), CultureInfo.GetCultureInfo("pt-BR"));
+                    var valorHora = decimal.Parse(record.Valorhora.Replace("R$", "").Replace(" ", "").Trim(), CultureInfo.GetCultureInfo("pt-BR"));
                     var data = DateTime.ParseExact(record.Data, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     var entrada = TimeSpan.ParseExact(record.Entrada, "hh\\:mm\\:ss", CultureInfo.InvariantCulture);
                     var saida = TimeSpan.ParseExact(record.Saída, "hh\\:mm\\:ss", CultureInfo.InvariantCulture);

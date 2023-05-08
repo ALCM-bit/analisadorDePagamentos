@@ -17,7 +17,8 @@ namespace analisadorDePagamento.Services
             {
                 // Verificar se já existe um funcionário com o mesmo código
                 Funcionario funcionarioExistente = funcionariosProcessados.Find(f => f.Codigo == folha.Codigo);
-
+                //pega horas trabalhadas
+                TimeSpan horasTrabalhadas = folha.Saida - folha.Entrada - (folha.TerminoAlmoco - folha.IniciAlmoco);
                 // Se o funcionário ainda não foi processado, criar um novo objeto Funcionario
                 if (funcionarioExistente == null) {
                     Funcionario funcionario = new Funcionario();
@@ -31,18 +32,34 @@ namespace analisadorDePagamento.Services
                     funcionario.DiasFalta = 0;
 
                     // Adicionar horas trabalhadas
-                    TimeSpan horasTrabalhadas = folha.Saida - folha.Entrada - (folha.IniciAlmoco - folha.TerminoAlmoco);
-                    if (horasTrabalhadas.TotalHours > 8) {
+                    if (horasTrabalhadas.TotalHours > 8) 
+                    {
                         funcionario.HorasExtra += (decimal)horasTrabalhadas.TotalHours - 8;
-                        funcionario.TotalReceber += (8 * folha.ValorHora) + ((decimal)(horasTrabalhadas.TotalHours - 8) * folha.ValorHora * 1.5M);
                     }
-                    else {
-                        funcionario.TotalReceber +=(decimal)horasTrabalhadas.TotalHours * folha.ValorHora;
+                    else 
+                    {
+                        funcionario.HorasDebito = (decimal)(8 - horasTrabalhadas.TotalHours);
                     }
-
+                    funcionario.TotalReceber += (decimal)horasTrabalhadas.TotalHours * folha.ValorHora;
                     // Adicionar dias trabalhados e dias de falta
                     funcionario.DiasTrabalhados++;
                     funcionariosProcessados.Add(funcionario);
+                }
+                else
+                {
+                    // Adicionar horas trabalhadas
+                    if (horasTrabalhadas.TotalHours > 8)
+                    {
+                        funcionarioExistente.HorasExtra += (decimal)horasTrabalhadas.TotalHours - 8;
+                    }
+                    else
+                    {
+                        funcionarioExistente.HorasDebito = (decimal)(8 - horasTrabalhadas.TotalHours);
+                    }
+                    funcionarioExistente.TotalReceber += (decimal)horasTrabalhadas.TotalHours * folha.ValorHora;
+                    // Adicionar dias trabalhados e dias de falta
+                    funcionarioExistente.DiasTrabalhados++;
+
                 }
                 //Adiciona funcionario a lista processada
                // funcionariosProcessados.Add(funcionarioExistente);
