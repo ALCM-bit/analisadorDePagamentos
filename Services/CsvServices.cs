@@ -15,11 +15,15 @@ namespace analisadorDePagamento.Services
     public class CsvServices : ICsvServices
     {
         private readonly IFuncionarioService _funcionarioService;
-        public CsvServices(IFuncionarioService funcionarioService)
+        private readonly IDepartamentoService _departamentoService;
+        public CsvServices(IFuncionarioService funcionarioService, IDepartamentoService departamentoService)
         {
             _funcionarioService = funcionarioService;
-            
+            _departamentoService = departamentoService;
         }
+
+        
+
         public List<Departamento> GetDadosCsv(string pasta)
         {
             var departamentos = new List<Departamento>();
@@ -82,6 +86,7 @@ namespace analisadorDePagamento.Services
                 var funcionariosProcessados = _funcionarioService.CalculaDados(folhasPonto);
                 funcionariosProcessados.RemoveAll(item => item == null);
                 departamento.Funcionarios.AddRange(funcionariosProcessados);
+                var departamentoProcessado = _departamentoService.ProcessarDados(departamento);
                 departamentos.Add(departamento);
             }
             return departamentos;

@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IFuncionarioService, FuncionarioService>();
 builder.Services.AddScoped<ICsvServices, CsvServices>();
 builder.Services.AddScoped<IDataRepository, DataRepository>();
+builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
 
 var app = builder.Build();
 

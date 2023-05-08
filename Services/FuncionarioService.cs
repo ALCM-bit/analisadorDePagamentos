@@ -19,9 +19,10 @@ namespace analisadorDePagamento.Services
                 Funcionario funcionarioExistente = funcionariosProcessados.Find(f => f.Codigo == folha.Codigo);
                 //pega horas trabalhadas
                 TimeSpan horasTrabalhadas = folha.Saida - folha.Entrada - (folha.TerminoAlmoco - folha.IniciAlmoco);
+                //cria objeto funcionario que será usado na lógica
+                Funcionario funcionario = new Funcionario();
                 // Se o funcionário ainda não foi processado, criar um novo objeto Funcionario
                 if (funcionarioExistente == null) {
-                    Funcionario funcionario = new Funcionario();
                     funcionario.Nome = folha.Nome;
                     funcionario.Codigo = folha.Codigo;
                     funcionario.TotalReceber = 0;
@@ -57,6 +58,7 @@ namespace analisadorDePagamento.Services
                         funcionarioExistente.HorasDebito = (decimal)(8 - horasTrabalhadas.TotalHours);
                     }
                     funcionarioExistente.TotalReceber += (decimal)horasTrabalhadas.TotalHours * folha.ValorHora;
+                    funcionarioExistente.TotalReceber -= (decimal)funcionario.HorasDebito * folha.ValorHora;
                     // Adicionar dias trabalhados e dias de falta
                     funcionarioExistente.DiasTrabalhados++;
 
