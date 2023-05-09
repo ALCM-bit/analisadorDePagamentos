@@ -8,6 +8,6 @@ namespace analisadorDePagamento.Interfaces.Repositories
 {
     public interface IDataRepository
     {
-        List<Departamento> GetDepartamentos(string pasta);
+        Task<List<Departamento>> GetDepartamentos(string pasta);
     }
 }

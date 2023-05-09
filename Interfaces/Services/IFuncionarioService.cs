@@ -8,7 +8,7 @@ namespace analisadorDePagamento.Interfaces.Services
 {
     public interface IFuncionarioService
     {
-        List<Funcionario> CalculaDados(List<FolhaPonto> ponto);
+        Task<List<Funcionario>> CalculaDados(List<FolhaPonto> ponto);
         int VerificarDiasUteis();
     }
 }

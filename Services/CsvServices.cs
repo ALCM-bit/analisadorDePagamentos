@@ -26,7 +26,7 @@ namespace analisadorDePagamento.Services
             _jsonConverter = jsonConverter;
         }
 
-        public List<Departamento> GetDadosCsv(string pasta)
+        public async Task<List<Departamento>> GetDadosCsv(string pasta)
         {
             try
             {
@@ -95,10 +95,10 @@ namespace analisadorDePagamento.Services
                         folhasPonto.Add(folhaPonto);
                     }
                     folhasPonto.RemoveAll(item => item == null);
-                    var funcionariosProcessados = _funcionarioService.CalculaDados(folhasPonto);
+                    var funcionariosProcessados = await _funcionarioService.CalculaDados(folhasPonto);
                     funcionariosProcessados.RemoveAll(item => item == null);
                     departamento.Funcionarios.AddRange(funcionariosProcessados);
-                    var departamentoProcessado = _departamentoService.ProcessarDados(departamento);
+                    var departamentoProcessado = await _departamentoService.ProcessarDados(departamento);
                     departamentos.Add(departamento);
                 }
                 _jsonConverter.ConverterDepartamentosEmJson(departamentos, pasta);

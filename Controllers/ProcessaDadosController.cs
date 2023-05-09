@@ -21,9 +21,9 @@ namespace analisadorDePagamento.Controllers
 
         [HttpGet]
         [Route("{pasta}")]
-        public ActionResult<List<Departamento>> GetDados(string pasta)
+        public async Task<ActionResult<List<Departamento>>> GetDados(string pasta)
         {
-            return Ok(_dataRepository.GetDepartamentos(pasta));
+            return Ok( await _dataRepository.GetDepartamentos(pasta));
         }
         
     }

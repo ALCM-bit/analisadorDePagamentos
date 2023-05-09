@@ -4,6 +4,6 @@ namespace analisadorDePagamento.Interfaces.Services
 {
     public interface IDepartamentoService
     {
-        Departamento ProcessarDados(Departamento departamento);
+        Task<Departamento> ProcessarDados(Departamento departamento);
     }
 }

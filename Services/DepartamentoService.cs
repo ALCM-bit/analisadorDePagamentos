@@ -5,7 +5,7 @@ namespace analisadorDePagamento.Services
 {
     public class DepartamentoService : IDepartamentoService
     {
-        public Departamento ProcessarDados(Departamento departamento)
+        public async Task<Departamento> ProcessarDados(Departamento departamento)
         {
             var totalPagar = departamento.Funcionarios.Sum(fs => fs.TotalReceber);
             var totalDescontos = departamento.Funcionarios
@@ -18,7 +18,7 @@ namespace analisadorDePagamento.Services
             departamento.TotalPagar = totalPagar;
             departamento.TotalDescontos = totalDescontos;
             departamento.TotalExtras = totalExtra;
-            return departamento;
+            return await Task.FromResult(departamento);
         }
     }
 }

@@ -10,10 +10,13 @@ namespace analisadorDePagamento.Services
 {
     public class FuncionarioService : IFuncionarioService
     {
-        public List<Funcionario> CalculaDados(List<FolhaPonto> ponto)
+        public async Task<List<Funcionario>> CalculaDados(List<FolhaPonto> ponto)
         {
             int diasUteis = VerificarDiasUteis();
             List<Funcionario> funcionariosProcessados = new List<Funcionario>();
+
+            await Task.Run(() => 
+            { 
 
             // Processar folhas de ponto e calcular dados dos funcionários
             foreach (FolhaPonto folha in ponto)
@@ -93,6 +96,7 @@ namespace analisadorDePagamento.Services
                 }
 
             }
+            });
             return funcionariosProcessados;
         }
 

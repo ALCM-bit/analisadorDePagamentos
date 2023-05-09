@@ -16,9 +16,9 @@ namespace analisadorDePagamento.Repositories
             _csvServices = csvServices;
             
         }
-        public List<Departamento> GetDepartamentos(string pasta)
+        public async Task<List<Departamento>> GetDepartamentos(string pasta)
         {
-            return _csvServices.GetDadosCsv(pasta);
+            return await _csvServices.GetDadosCsv(pasta);
         }
     }
 }
