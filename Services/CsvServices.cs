@@ -26,8 +26,6 @@ namespace analisadorDePagamento.Services
             _jsonConverter = jsonConverter;
         }
 
-
-
         public List<Departamento> GetDadosCsv(string pasta)
         {
             try
@@ -65,8 +63,6 @@ namespace analisadorDePagamento.Services
                         Delimiter = ";",
                         HasHeaderRecord = true,
                         IgnoreBlankLines = true,
-                        // TypeConverterOptions = { NumberStyles = NumberStyles.AllowDecimalPoint },
-                        // CultureInfo = CultureInfo.GetCultureInfo("pt-BR")
                     };
                     using var reader = new StreamReader(file, Encoding.GetEncoding("iso-8859-1"));
                     using var csv = new CsvReader(reader, configuration);

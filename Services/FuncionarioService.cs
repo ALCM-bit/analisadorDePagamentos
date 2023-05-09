@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using analisadorDePagamento.Interfaces.Services;
@@ -11,10 +12,11 @@ namespace analisadorDePagamento.Services
     {
         public List<Funcionario> CalculaDados(List<FolhaPonto> ponto)
         {
+            int diasUteis = VerificarDiasUteis();
             List<Funcionario> funcionariosProcessados = new List<Funcionario>();
 
             // Processar folhas de ponto e calcular dados dos funcionários
-            foreach (FolhaPonto folha in ponto) 
+            foreach (FolhaPonto folha in ponto)
             {
                 // Verificar se já existe um funcionário com o mesmo código
                 Funcionario funcionarioExistente = funcionariosProcessados.Find(f => f.Codigo == folha.Codigo);
@@ -23,7 +25,8 @@ namespace analisadorDePagamento.Services
                 //cria objeto funcionario que será usado na lógica
                 Funcionario funcionario = new Funcionario();
                 // Se o funcionário ainda não foi processado, criar um novo objeto Funcionario
-                if (funcionarioExistente == null) {
+                if (funcionarioExistente == null)
+                {
                     funcionario.Nome = folha.Nome;
                     funcionario.Codigo = folha.Codigo;
                     funcionario.TotalReceber = 0;
@@ -34,17 +37,19 @@ namespace analisadorDePagamento.Services
                     funcionario.DiasFalta = 0;
 
                     // Adicionar horas trabalhadas
-                    if (horasTrabalhadas.TotalHours > 8) 
+                    if (horasTrabalhadas.TotalHours > 8)
                     {
                         funcionario.HorasExtra += (decimal)horasTrabalhadas.TotalHours - 8;
                     }
-                    else 
+                    else
                     {
                         funcionario.HorasDebito = (decimal)(8 - horasTrabalhadas.TotalHours);
                     }
                     funcionario.TotalReceber += (decimal)horasTrabalhadas.TotalHours * folha.ValorHora;
                     // Adicionar dias trabalhados e dias de falta
                     funcionario.DiasTrabalhados++;
+
+                    //Adiciona o funcionário a nova lista
                     funcionariosProcessados.Add(funcionario);
                 }
                 else
@@ -64,29 +69,54 @@ namespace analisadorDePagamento.Services
                     funcionarioExistente.DiasTrabalhados++;
 
                 }
-                //Adiciona funcionario a lista processada
-               // funcionariosProcessados.Add(funcionarioExistente);
+
             }
 
             // Calcular dias extras e dias de falta
-            foreach (Funcionario funcionario in funcionariosProcessados) {
+            foreach (Funcionario funcionario in funcionariosProcessados)
+            {
                 if (funcionario != null)
                 {
                     // Verificar se o funcionário trabalhou mais de 22 dias no mês
-                if (funcionario.DiasTrabalhados > 22) {
-                    funcionario.DiasExtras = funcionario.DiasTrabalhados - 22;
+                    if (funcionario.DiasTrabalhados > diasUteis)
+                    {
+                        funcionario.DiasExtras = funcionario.DiasTrabalhados - diasUteis;
+                    }
+
+                    // Verificar se o funcionário trabalhou em todos os dias úteis do mês (considerando 22 dias úteis)
+                    int diasFalta = diasUteis - funcionario.DiasTrabalhados;
+                    if (diasFalta > 0)
+                    {
+                        funcionario.DiasFalta = diasFalta;
+                    }
+
                 }
 
-                // Verificar se o funcionário trabalhou em todos os dias úteis do mês (considerando 22 dias úteis)
-                int diasFalta = 22 - funcionario.DiasTrabalhados;
-                if (diasFalta > 0) {
-                    funcionario.DiasFalta = diasFalta;
-                }
-
-                }
-                
             }
             return funcionariosProcessados;
+        }
+
+        public int VerificarDiasUteis()
+        {
+            // Obter o mês anterior ao atual
+            var mesAnterior = DateTime.Now.AddMonths(-1);
+
+            // Criar um objeto CultureInfo para o Brasil, onde a semana começa na segunda-feira
+            var culturaBrasil = new CultureInfo("pt-BR");
+
+            // Contar o número de dias úteis do mês anterior
+            var totalDiasUteis = 0;
+            for (var dia = 1; dia <= DateTime.DaysInMonth(mesAnterior.Year, mesAnterior.Month); dia++)
+            {
+                var data = new DateTime(mesAnterior.Year, mesAnterior.Month, dia);
+                if (culturaBrasil.DateTimeFormat.DayNames[(int)data.DayOfWeek] != "sábado" &&
+                    culturaBrasil.DateTimeFormat.DayNames[(int)data.DayOfWeek] != "domingo")
+                {
+                    totalDiasUteis++;
+                }
+            }
+
+            return totalDiasUteis;
         }
     }
 }
