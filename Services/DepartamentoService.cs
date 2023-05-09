@@ -9,10 +9,10 @@ namespace analisadorDePagamento.Services
         {
             var totalPagar = departamento.Funcionarios.Sum(fs => fs.TotalReceber);
             var totalDescontos = departamento.Funcionarios
-                .Select(f => f.HorasDebito * (f.TotalReceber/f.DiasTrabalhados))
+                .Select(f => f.HorasDebito * (f.TotalReceber/(f.DiasTrabalhados * 8)))
                 .Sum();
             var totalExtra = departamento.Funcionarios
-                .Select(f => f.HorasExtra * (f.TotalReceber/f.DiasTrabalhados))
+                .Select(f => f.HorasExtra * (f.TotalReceber/(f.DiasTrabalhados * 8)))
                 .Sum();
 
             departamento.TotalPagar = totalPagar;
