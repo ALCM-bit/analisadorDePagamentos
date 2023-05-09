@@ -1,4 +1,5 @@
-﻿using analisadorDePagamento.Models;
+﻿using analisadorDePagamento.Interfaces.Services;
+using analisadorDePagamento.Models;
 
 namespace analisadorDePagamento.Services
 {

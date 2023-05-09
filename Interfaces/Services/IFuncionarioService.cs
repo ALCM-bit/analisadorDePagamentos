@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using analisadorDePagamento.Models;
 
-namespace analisadorDePagamento.Services
+namespace analisadorDePagamento.Interfaces.Services
 {
     public interface IFuncionarioService
     {

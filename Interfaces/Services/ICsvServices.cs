@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using analisadorDePagamento.Models;
 
-namespace analisadorDePagamento.Repositories
+namespace analisadorDePagamento.Interfaces.Services
 {
-    public interface IDataRepository
+    public interface ICsvServices
     {
-        List<Departamento> GetDepartamentos(string pasta);
+        List<Departamento> GetDadosCsv(string pasta);
     }
 }

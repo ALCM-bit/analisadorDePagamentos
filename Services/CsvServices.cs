@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using analisadorDePagamento.JsonConverter;
+using analisadorDePagamento.Interfaces.Services;
 using analisadorDePagamento.Models;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -18,8 +18,8 @@ namespace analisadorDePagamento.Services
     {
         private readonly IFuncionarioService _funcionarioService;
         private readonly IDepartamentoService _departamentoService;
-        private readonly IJsonConverter _jsonConverter;
-        public CsvServices(IFuncionarioService funcionarioService, IDepartamentoService departamentoService, IJsonConverter jsonConverter)
+        private readonly IJsonService _jsonConverter;
+        public CsvServices(IFuncionarioService funcionarioService, IDepartamentoService departamentoService, IJsonService jsonConverter)
         {
             _funcionarioService = funcionarioService;
             _departamentoService = departamentoService;

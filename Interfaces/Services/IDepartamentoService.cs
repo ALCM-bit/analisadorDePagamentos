@@ -1,6 +1,6 @@
 ﻿using analisadorDePagamento.Models;
 
-namespace analisadorDePagamento.Services
+namespace analisadorDePagamento.Interfaces.Services
 {
     public interface IDepartamentoService
     {

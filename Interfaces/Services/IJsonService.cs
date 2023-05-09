@@ -1,8 +1,8 @@
 ﻿using analisadorDePagamento.Models;
 
-namespace analisadorDePagamento.JsonConverter
+namespace analisadorDePagamento.Interfaces.Services
 {
-    public interface IJsonConverter
+    public interface IJsonService
     {
         void ConverterDepartamentosEmJson(List<Departamento> departamentos, string pasta);
     }

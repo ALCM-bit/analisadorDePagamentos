@@ -1,9 +1,10 @@
-﻿using analisadorDePagamento.Models;
+﻿using analisadorDePagamento.Interfaces.Services;
+using analisadorDePagamento.Models;
 using Newtonsoft.Json;
 
-namespace analisadorDePagamento.JsonConverter
+namespace analisadorDePagamento.Services
 {
-    public class JsonConverter : IJsonConverter
+    public class JsonService : IJsonService
     {
         public void ConverterDepartamentosEmJson(List<Departamento> departamentos, string pasta)
         {

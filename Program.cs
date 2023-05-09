@@ -1,4 +1,5 @@
-using analisadorDePagamento.JsonConverter;
+using analisadorDePagamento.Interfaces.Repositories;
+using analisadorDePagamento.Interfaces.Services;
 using analisadorDePagamento.Repositories;
 using analisadorDePagamento.Services;
 
@@ -16,7 +17,7 @@ builder.Services.AddScoped<IFuncionarioService, FuncionarioService>();
 builder.Services.AddScoped<ICsvServices, CsvServices>();
 builder.Services.AddScoped<IDataRepository, DataRepository>();
 builder.Services.AddScoped<IDepartamentoService, DepartamentoService>();
-builder.Services.AddScoped<IJsonConverter, JsonConverter>();
+builder.Services.AddScoped<IJsonService, JsonService>();
 
 var app = builder.Build();
 
